@@ -69,4 +69,33 @@ class TweetSetSuite extends FunSuite {
       assert(trends.head.user == "a" || trends.head.user == "b")
     }
   }
+  
+  test("mostRetweeted") {
+    new TestSets {
+      val crtSet = set3.incl(new Tweet("u1", "body", 100))
+      val mostRetweeted = crtSet.mostRetweeted
+      assert(mostRetweeted != null)
+      assert(mostRetweeted.user == "u1")
+    }
+  }
+
+   test("mostRetweeted on empty set") {
+    new TestSets {
+      val exception = intercept[NoSuchElementException] {
+          val mostRetweeted = (new Empty).mostRetweeted
+	      assert(mostRetweeted != null)
+	      assert(mostRetweeted.user == "u1")
+      }
+      assert(exception != null)
+    }
+  }
+     
+   test("mostRetweeted ambigous") {
+    new TestSets {
+      val mostRetweeted = set5.mostRetweeted
+      assert(mostRetweeted != null)
+      assert(mostRetweeted.user == "a" || mostRetweeted.user == "b")
+    }
+  }
+  
 }

@@ -59,9 +59,7 @@ abstract class TweetSet {
    * and be implemented in the subclasses?
    */
    def union(that: TweetSet): TweetSet = {
-    var crt: TweetSet = that
-    foreach(tweet => crt = crt.incl(tweet))
-    crt;
+	  filterAcc(t => true, that)
   }
 
   /**
@@ -143,11 +141,14 @@ class Empty extends TweetSet {
   def remove(tweet: Tweet): TweetSet = this
 
   def foreach(f: Tweet => Unit): Unit = ()
+  
+  override def toString = "."
 }
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
+//    acc.incl(elem) union left.filterAcc(p, acc)
     var crt = acc;
     foreach(tweet => crt = if (p(tweet)) crt.incl(tweet) else crt)
     crt
@@ -178,6 +179,8 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     left.foreach(f)
     right.foreach(f)
   }
+  
+  override def toString = "{" + left + elem.user + right + "}"
 }
 
 trait TweetList {
