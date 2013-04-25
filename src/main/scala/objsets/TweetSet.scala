@@ -72,6 +72,7 @@ abstract class TweetSet {
    * and be implemented in the subclasses?
    */
   def mostRetweeted: Tweet = {
+//    filter(t => t.retweets >)
     var max: Tweet = null
     foreach(tweet => max = if (max == null || max.retweets < tweet.retweets) tweet else max)
     if (max == null) throw new NoSuchElementException("Empty list!")
@@ -148,10 +149,9 @@ class Empty extends TweetSet {
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
-//    acc.incl(elem) union left.filterAcc(p, acc)
-    var crt = acc;
-    foreach(tweet => crt = if (p(tweet)) crt.incl(tweet) else crt)
-    crt
+    val tmp = left.filterAcc(p, right.filterAcc(p, acc))
+    if (p(elem)) tmp.incl(elem)
+    else tmp
   }
 
   /**
